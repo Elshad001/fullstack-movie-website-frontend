@@ -2,45 +2,27 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchContent } from './slice/contentSlice';
-
-
-
+import Header from './components/Header';
+import MovieCard from './components/MovieCard';
+import MovieSlider from './components/MovieSlider';
 
 function App() {
 
-  // const [data, setData] = useState([]);
-  
+  const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   fetch("/api")
-  //     .then((response) => response.json())
-  //     .then((data) => setData(data));
-  // }, [])
+  useEffect(() => {
+    dispatch(fetchContent())
+  }, [dispatch])
 
-const dispatch = useDispatch();
+  const contents = useSelector((state) => state.content.contents)
+  const [filteredMovies,setFilteredMovies] =useState(contents)
 
-useEffect(()=>
-{
-  dispatch(fetchContent())
-},[dispatch])
 
-const contents = useSelector((state)=>state.content.contents)
-
-console.log(contents)
   return (
-    <div className="App">
-      {contents.map((movie) =>
-      (
-        <div key={movie.id}>
-          <p>{movie.name}</p>
-          <img src={movie.image} alt='' width="100px" height="120px"/>
-          <div>
-            <span>{movie.year}</span>
-            <br></br>
-            <span>{movie.raiting}</span>
-          </div>
-        </div>
-      ))}
+    <div className="">
+      <Header contents={contents} filteredMovies={filteredMovies} setFilteredMovies={setFilteredMovies}/>
+      <MovieSlider contents={contents}/>
+      <MovieCard  contents={contents} filteredMovies={filteredMovies} setFilteredMovies={setFilteredMovies} />
     </div>
   );
 }
